@@ -27,7 +27,7 @@ public class ScrollingScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log(Time.deltaTime);
+		//Debug.Log(Time.deltaTime);
 		transform.Translate(ScrollSpeed * Time.deltaTime);
 		if(IsLinkedToCamera) {
 			Camera.main.transform.Translate(ScrollSpeed);

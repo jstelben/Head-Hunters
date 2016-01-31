@@ -31,9 +31,9 @@ public class CameraScript : MonoBehaviour {
 			if(destination.x <= transform.position.x || endOfScreen.x <= 1.0f) {
 				x = transform.position.x;
 			}
-			if(botOfScreen.y <= 1) {
-				y = transform.position.y;
-				Debug.Log("wtf");
+			if(BottomOfStage.position.y < destination.y) {
+				//y = transform.position.y;
+				//Debug.Log("wtf");
 			}
 			transform.position = Vector3.SmoothDamp(transform.position, new Vector3(x, y, destination.z), ref velocity, dampTime);
 		}

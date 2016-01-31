@@ -83,11 +83,7 @@ public class EnemyScript : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D collision){
 		if(collision.gameObject.name.Contains("Tomahawk")) {
 			if(collision.gameObject.GetComponent<TomahawkScript>().InHand) {
-				//Replace this later with player getting hit.
-				GetComponent<DistanceJoint2D>().enabled = false;
-				head.freezeRotation = false;
-				head.AddForce(headPopForce, ForceMode2D.Impulse);
-				Destroy(gameObject);
+				Application.LoadLevel("GameOver");
 			}
 			else {
 				Destroy(collision.gameObject);
