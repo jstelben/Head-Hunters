@@ -9,16 +9,24 @@ public class TimerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		timerText = GetComponent<Text>();
+		startTime = this.GetCurrentTime();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		startTime -= Time.deltaTime;
+		if(startTime <= 0) {
+			Application.LoadLevel("GameOver");
+		}
 		timerText.text = string.Format("{1}:{0}", (int)startTime % 60, (int)startTime / 60);
 		//timerText.text = startTime.ToString();
 	}
 
 	public void IncreaseTime(float increase) {
 		startTime += increase;
+	}
+
+	void OnDestroy() {
+		this.SetCurrentTime(startTime);
 	}
 }

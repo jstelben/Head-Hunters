@@ -15,6 +15,9 @@ public class PlayerScript : MonoBehaviour {
 	public AudioSource AxeThrowSound;
 	public AudioSource JumpSound;
 	public int ReloadSpeed;
+	public Transform EndOfStage;
+	public string NextScene;
+	public Transform BottomStage;
 
 	private float distToGround;
 	private BoxCollider2D collider;
@@ -61,10 +64,14 @@ public class PlayerScript : MonoBehaviour {
 		joint = GetComponent<DistanceJoint2D>();
 		animator = GetComponent<Animator>();
 		tomahawk = joint.connectedBody;
+		headCount = this.GetHeadCount();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if(BottomStage != null && transform.position.y < BottomStage.position.y) {
+			Application.LoadLevel("GameOver");
+		}
 		if(reload > 0) {
 			reload--;
 			if(reload == 0) {
@@ -78,6 +85,15 @@ public class PlayerScript : MonoBehaviour {
 		if (headCount >= headsToSavage) {
 			isSavage = true;
 		}
+		if(transform.position.x > EndOfStage.position.x) {
+			this.SetHeadCount(headCount);
+			Application.LoadLevel(NextScene);
+
+		}
+	}
+
+	void OnDestroy() {
+		this.SetHeadCount(headCount);
 	}
 
 	void FixedUpdate() {
@@ -114,7 +130,9 @@ public class PlayerScript : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.S) && reload == 0) {
 			ThrowTomahawk();
 		}
-
+		 if (Input.GetKey("escape")) {
+            Application.Quit();
+        }
 	}
 
 	void OnCollisionStay2D(Collision2D collision){
