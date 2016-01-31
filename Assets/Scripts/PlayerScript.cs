@@ -12,15 +12,18 @@ public class PlayerScript : MonoBehaviour {
 	public float savageJumpForce;
 	public Vector2 savageThrowForce;
 	public float savageTorqueForce;
+	public AudioSource AxeThrowSound;
+	public AudioSource JumpSound;
+	public int ReloadSpeed;
 
 	private float distToGround;
 	private BoxCollider2D collider;
 	private bool isGrounded = false;
+	private int reload = 0;
 	private DistanceJoint2D joint;
 	private Rigidbody2D tomahawk;
 	private Vector2 tomahawkPos;
 	private Quaternion tomahawkRot;
-	private int reload = 0;
 	private Rigidbody2D body;
 	private Vector2 playerPos;
 	private int headCount = 0;
@@ -101,6 +104,7 @@ public class PlayerScript : MonoBehaviour {
 		
 
 		if(Input.GetKeyDown("space") && isGrounded) {
+			JumpSound.Play();
 			body.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
 			if(body.velocity.y > jumpForce) {
 				body.velocity = new Vector2(body.velocity.x, jumpForce);
@@ -158,7 +162,8 @@ public class PlayerScript : MonoBehaviour {
 			tomahawk.AddForce(randThrowForce + body.velocity, ForceMode2D.Impulse);
 			tomahawk.AddTorque(torqueForce, ForceMode2D.Force);
 		}
-		reload = 1;
+		AxeThrowSound.Play();
+		reload = ReloadSpeed;
 
 	}
 

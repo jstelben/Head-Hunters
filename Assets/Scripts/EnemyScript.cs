@@ -8,12 +8,17 @@ public class EnemyScript : MonoBehaviour {
 	public int Health = 2;
 	public Sprite DeadHeadSprite;
 	public ParticleSystem Decapitation;
+	public AudioSource AxeHitSound;
+	public AudioSource AxeKillSound;
+	public AudioSource DeathSound;
+	public AudioSource DeathMoanSound;
 
 	private float leftWall = 0.0f;
 	private float rightWall = 0.0f;
 	private BoxCollider2D collider;
 	private Rigidbody2D head;
 	private int currentDir = 1;
+	private bool hasPlatform = false;
 	// Use this for initialization
 	void Start () {
 		collider = GetComponent<BoxCollider2D>();
@@ -54,7 +59,8 @@ public class EnemyScript : MonoBehaviour {
 	}
 
 	void OnCollisionStay2D(Collision2D collision){
-		if(collision.gameObject.name.Contains("Ground")) {
+		if(!hasPlatform && collision.gameObject.name.Contains("Ground")) {
+			hasPlatform = true;
 			leftWall = collision.collider.bounds.center.x - collision.collider.bounds.extents.x;
 			rightWall = collision.collider.bounds.center.x + collision.collider.bounds.extents.x;
 		}
@@ -71,12 +77,16 @@ public class EnemyScript : MonoBehaviour {
 			}
 			else {
 				Destroy(collision.gameObject);
+				AxeHitSound.Play();
 				Health -= 1;
 				if(Health == 0) {
+					AxeKillSound.Play();
+					DeathMoanSound.Play();
 					CircleCollider2D headCollider = head.gameObject.GetComponent<CircleCollider2D>();
 					Vector3 decapPos;
 					decapPos = new Vector3(headCollider.bounds.center.x, headCollider.bounds.extents.y + headCollider.bounds.center.y, 0);
 					ParticleSystem decap = (ParticleSystem) Instantiate(Decapitation, decapPos, new Quaternion(0,0,0,0));
+					Destroy(decap, 3);
 					decap.Play();
 					GetComponent<DistanceJoint2D>().enabled = false;
 					head.freezeRotation = false;
@@ -87,6 +97,12 @@ public class EnemyScript : MonoBehaviour {
 					
 			}
 		}
+	}
+
+	void OnBecameVisible(){
+		//if(Random.value < 0.1) {
+			DeathSound.Play();
+		//}
 	}
 
 }
