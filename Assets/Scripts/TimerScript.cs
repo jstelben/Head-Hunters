@@ -9,6 +9,7 @@ public class TimerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		timerText = GetComponent<Text>();
+		startTime = this.GetCurrentTime();
 	}
 	
 	// Update is called once per frame
@@ -20,5 +21,9 @@ public class TimerScript : MonoBehaviour {
 
 	public void IncreaseTime(float increase) {
 		startTime += increase;
+	}
+
+	void OnDestroy() {
+		this.SetCurrentTime(startTime);
 	}
 }

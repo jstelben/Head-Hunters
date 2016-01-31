@@ -1,5 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+/*
+public static class RendererExtensions
+{
+  public static bool IsVisibleFrom(this Renderer renderer, Camera camera)
+  {
+    Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+    return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
+  }
+}*/
 
 public class EnemyScript : MonoBehaviour {
 	private int direction = 0;
@@ -19,6 +28,7 @@ public class EnemyScript : MonoBehaviour {
 	private Rigidbody2D head;
 	private int currentDir = 1;
 	private bool hasPlatform = false;
+	private bool firstVisible = true;
 	// Use this for initialization
 	void Start () {
 		collider = GetComponent<BoxCollider2D>();
@@ -28,6 +38,10 @@ public class EnemyScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(firstVisible && GetComponent<Renderer>().IsVisibleFrom(Camera.main)) {
+			DeathSound.Play();
+			firstVisible = false;
+		}
 		transform.Translate(speed, 0, 0);
 		if(collider.bounds.center.x - collider.bounds.extents.x <= leftWall) {
 			speed *= -1;
@@ -98,11 +112,4 @@ public class EnemyScript : MonoBehaviour {
 			}
 		}
 	}
-
-	void OnBecameVisible(){
-		//if(Random.value < 0.1) {
-			DeathSound.Play();
-		//}
-	}
-
 }

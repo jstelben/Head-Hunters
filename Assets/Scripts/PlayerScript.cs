@@ -15,6 +15,8 @@ public class PlayerScript : MonoBehaviour {
 	public AudioSource AxeThrowSound;
 	public AudioSource JumpSound;
 	public int ReloadSpeed;
+	public Transform EndOfStage;
+	public string NextScene;
 
 	private float distToGround;
 	private BoxCollider2D collider;
@@ -61,6 +63,7 @@ public class PlayerScript : MonoBehaviour {
 		joint = GetComponent<DistanceJoint2D>();
 		animator = GetComponent<Animator>();
 		tomahawk = joint.connectedBody;
+		headCount = this.GetHeadCount();
 	}
 	
 	// Update is called once per frame
@@ -77,6 +80,11 @@ public class PlayerScript : MonoBehaviour {
 		}
 		if (headCount >= headsToSavage) {
 			isSavage = true;
+		}
+		if(transform.position.x > EndOfStage.position.x) {
+			this.SetHeadCount(headCount);
+			Application.LoadLevel(NextScene);
+
 		}
 	}
 
